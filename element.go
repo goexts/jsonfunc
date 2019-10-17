@@ -27,13 +27,30 @@ func (e elementImpl) Value() Element {
 
 func NewElement(ele interface{}) Element {
 	t := reflect.TypeOf(ele)
-	//v := reflect.ValueOf(ele)
-	fmt.Println(t.Field(0).Tag.Get("name"))
-
 	return &elementImpl{
 		elementType: t,
-		key:         nil,
-		data:        nil,
+		key:         t.Name(),
+		data:        ElementData(t.Name(), reflect.ValueOf(ele)),
 		value:       nil,
 	}
+}
+
+func ElementData(name string, value reflect.Value) interface{} {
+	var elements []Element
+	fmt.Println("name:", name)
+	fmt.Println("print value:", value.String())
+	switch value.Kind() {
+	case reflect.Slice:
+	case reflect.Struct:
+		for i := 0; i < value.NumField(); i++ {
+			elements = append(elements, &elementImpl{
+				elementType: nil,
+				key:         value.Field(i).String(),
+				data:        ElementData(value.Field(i).Type().Name(), value.Field(i)),
+				value:       nil,
+			})
+		}
+	}
+	return elements
+
 }

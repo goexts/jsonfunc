@@ -10,7 +10,8 @@ type FieldStruct struct {
 }
 
 type Fields struct {
-	Fields []FieldStruct `json:"fields"`
+	Fields     []FieldStruct `json:"fields"`
+	OtherField FieldStruct   `json:"other_field"`
 }
 
 func TestNewElement(t *testing.T) {
